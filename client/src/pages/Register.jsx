@@ -1,41 +1,54 @@
+//  Global Styles
 import 'bootstrap/dist/css/bootstrap.min.css';
+import "react-toastify/dist/ReactToastify.css";
+
+// third-party libraries
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { toast, ToastContainer } from "react-toastify";
 
 const Register = () => {
-    const [errors, setErrors] = useState({});
-    const [login, setLogin] = useState("");
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [passwordConfirm, setPasswordConfirm] = useState("");
-    const navigate = useNavigate();
+
+//  Navigation & globals hooks 
+const navigate = useNavigate();
+
+// State
+const [login, setLogin] = useState("");
+const [email, setEmail] = useState("");
+const [password, setPassword] = useState("");
+const [passwordConfirm, setPasswordConfirm] = useState("");
+
+//  error handling
+const [errors, setErrors] = useState({});
 
     const handleSubmit = (event) => {
         event.preventDefault();
-
-        axios.post('http://localhost:4242/account/register', { login, email, password, passwordConfirm })
+        try {
+            axios.post('http://localhost:4242/account/register', { login, email, password, passwordConfirm })
             .then(result => {
                 if (result.status === 200) {
-                    navigate('/login');
-                } else {
-                    alert("Registration successful! Please login to proceed.");
-                }
+                    toast.success("Registration completed !");
+                    setTimeout(() => {
+                        navigate("/login");
+                      }, 2000);
+                } 
+                
             })
-            .catch(err => {
-                if (err.response) {
-                    // console.log(err.response.data);
-                    setErrors(err.response.data.errors || {});
-                }
-            });
+            
+        } catch (err) {
+            if (err.response) {
+                setErrors(err.response.data.errors || {});
+            }       
+        }
     };
 
     return (
         <div className="d-flex justify-content-center align-items-center text-center vh-100" 
              style={{ backgroundImage: "linear-gradient(#00d5ff,#0095ff,rgba(93,0,255,.555))" }}>
+                        <ToastContainer/>
             <div className="bg-white p-3 rounded" style={{ width: '40%' }}>
-                <h2 className='mb-3 text-primary'>{Register}</h2>
+                <h2 className='mb-3 text-primary'>Register</h2>
                 <form onSubmit={handleSubmit}>
                     <div className="mb-3 text-start">
                         <label htmlFor="exampleInputLogin" className="form-label"><strong>Login</strong></label>

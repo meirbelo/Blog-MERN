@@ -38,9 +38,18 @@ function validateUserSignUp(user) {
     });
     return schema.validate(user);
 }
+
+function validateUserSignIn(user) {
+    const schema = Joi.object({
+        login: Joi.string().min(5).max(20).required(),
+        password: Joi.string().min(7).max(30).required(),
+    });
+    return schema.validate(user);
+}
 const User = mongoose.model('accounts', userSchema);
 
 module.exports = {
     User,
     validateUserSignUp,
+    validateUserSignIn,
 }

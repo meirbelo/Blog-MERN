@@ -1,0 +1,5 @@
+# Ignore les fichiers .env et node_modules dans les sous-dossiers (client et server)
+client/.env
+client/node_modules/
+server/.env
+server/node_modules/
